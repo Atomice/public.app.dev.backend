@@ -3,7 +3,7 @@
 # https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-7.0
 
 # https://hub.docker.com/_/microsoft-dotnet
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
@@ -17,7 +17,7 @@ WORKDIR /source/publicapis
 RUN dotnet publish -c release -o /app --use-current-runtime --self-contained false --no-restore
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine
 WORKDIR /app
 COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "publicapis.dll"]
+CMD ["dotnet", "publicapis.dll"]
